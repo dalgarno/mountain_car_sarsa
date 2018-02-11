@@ -10,13 +10,13 @@ from matplotlib import pyplot as plt
 from matplotlib import cm
 from mpl_toolkits.mplot3d import Axes3D
 
-NUM_EPISODES = 1
+NUM_EPISODES = 5
 NUM_TILINGS = 8
 EPSILON = 0.1
 ALPHA = 0.01
 GAMMA = 0.9
 MAX_STATES = 4096
-MAX_STEPS = 428
+MAX_STEPS = 25000
 
 random.seed(0)
 iht = IHT(MAX_STATES)
@@ -48,7 +48,7 @@ def update_weights_terminal(r, a, w, s, env):
 
 
 def update_weights_step(r, a, w, s, env, s_prime, a_prime):
-    return ALPHA * (r + GAMMA * state_action_value(s, w, a, env)) - (state_action_value(s_prime, w, a_prime, env))
+    return ALPHA * (r + (GAMMA * state_action_value(s, w, a, env)) - (state_action_value(s_prime, w, a_prime, env)))
 
 
 def max_action_value(s, w, env):
@@ -62,7 +62,7 @@ def show_plot(w, env):
     xs = np.linspace(min_x, max_x, dim)
     ys = np.linspace(min_x_dot, max_x_dot, dim)
 
-    zs = np.array([max_action_value([x, y], w, env) for x in xs for y in ys]).reshape((dim, dim))
+    zs = np.array([-max_action_value([x, y], w, env) for x in xs for y in ys]).reshape((dim, dim))
     xs, ys = np.meshgrid(xs, ys)
     fig = plt.figure()
     ax = fig.gca(projection='3d')
@@ -87,7 +87,7 @@ def main():
         while True:
             print('Step: {}'.format(step))
             s_prime, r, done, info = env.step(a)
-            # env.render()
+            env.render()
             if done:
                 w[active_tiles(s, a, env)] += update_weights_terminal(r, a, w, s, env)
                 break
@@ -99,7 +99,7 @@ def main():
             print('a: {}'.format(a))
             step += 1
 
-    show_plot(w, env)
+    # show_plot(w, env)
 
 
 if __name__ == '__main__':
