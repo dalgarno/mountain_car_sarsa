@@ -29,8 +29,10 @@ def active_tiles(s, a, env):
     return tiles(iht,NUM_TILINGS,[NUM_TILINGS*x/(max_x - min_x),
                         NUM_TILINGS*x_dot/(max_x_dot - min_x_dot)],[a])
 
+
 def state_action_value(s, w, a, env):
     return sum(w[active_tiles(s, a, env)])
+
 
 def select_action(s, w, env):
     action_list = [0, 1, 2]
@@ -44,19 +46,23 @@ def select_action(s, w, env):
 def update_weights_terminal(r, a, w, s, env):
     return ALPHA * (r - state_action_value(s, w, a, env))
 
-def update_weights_step(r, a, w, s, env):
-    return ALPHA * (r + GAMMA * state_action_value(s, w, a, env)) - (state_action_value(s, w, a, env))
+
+def update_weights_step(r, a, w, s, env, s_prime, a_prime):
+    return ALPHA * (r + GAMMA * state_action_value(s, w, a, env)) - (state_action_value(s_prime, w, a_prime, env))
+
 
 def max_action_value(s, w, env):
     return max(list(map(lambda a: state_action_value(s, w, a, env), [0, 1, 2])))
 
+
 def show_plot(w, env):
+    dim = 200
     max_x, max_x_dot = tuple(env.observation_space.high)
     min_x, min_x_dot = tuple(env.observation_space.low)
-    xs = np.linspace(min_x, max_x, 100)
-    ys = np.linspace(min_x_dot, max_x_dot, 100)
+    xs = np.linspace(min_x, max_x, dim)
+    ys = np.linspace(min_x_dot, max_x_dot, dim)
 
-    zs = np.array([-max_action_value([x, y], w, env) for x in xs for y in ys]).reshape((100, 100))
+    zs = np.array([max_action_value([x, y], w, env) for x in xs for y in ys]).reshape((dim, dim))
     xs, ys = np.meshgrid(xs, ys)
     fig = plt.figure()
     ax = fig.gca(projection='3d')
@@ -87,13 +93,13 @@ def main():
                 break
 
             a_prime = select_action(s_prime, w, env)
-            w[active_tiles(s, a, env)] += update_weights_step(r, a, w, s, env)
+            w[active_tiles(s, a, env)] += update_weights_step(r, a, w, s, env, s_prime, a_prime)
             s = s_prime
             a = a_prime
             print('a: {}'.format(a))
             step += 1
 
-    # show_plot(w, env)
+    show_plot(w, env)
 
 
 if __name__ == '__main__':
