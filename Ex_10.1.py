@@ -10,11 +10,11 @@ from matplotlib import pyplot as plt
 from matplotlib import cm
 from mpl_toolkits.mplot3d import Axes3D
 
-NUM_EPISODES = 5
+NUM_EPISODES = 20
 NUM_TILINGS = 8
 EPSILON = 0.1
 ALPHA = 0.01
-GAMMA = 0.9
+GAMMA = 0.95
 MAX_STATES = 4096
 MAX_STEPS = 25000
 
