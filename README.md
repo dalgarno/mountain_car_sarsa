@@ -1,4 +1,4 @@
-# # Mountain Car Episodic Semi-gradient Sarsa
+# Mountain Car Episodic Semi-gradient Sarsa
 
 This repo contains the code to reproduce the figures found in Reinforcement Learning: An Introduction Chapter 10 Example 10.1.
 
