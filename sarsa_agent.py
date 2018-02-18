@@ -55,7 +55,7 @@ class SARSAAgent(object):
             while True:
                 s_prime, r, done, info = self.env.step(a)
                 episode_reward += r
-                # self.env.render()
+                self.env.render()
 
                 if done:
                     self.weights[self.active_tiles(s, a)] += \

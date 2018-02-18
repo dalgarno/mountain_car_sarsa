@@ -5,6 +5,7 @@ import matplotlib as mpl
 from sarsa_agent import SARSAAgent
 mpl.use('TkAgg')
 import gym
+from gym import wrappers
 
 from matplotlib import pyplot as plt
 from matplotlib import cm
@@ -35,9 +36,10 @@ def show_plot(agent):
 def main():
     weights = np.zeros(4096)
     env = gym.make('MountainCar-v0')
+    env = wrappers.Monitor(env, '/tmp/mountain_car', force=True)
     env._max_episode_steps = 1000
     agent = SARSAAgent(env, weights, eps=0.0)
-    num_episodes = 9000
+    num_episodes = 500
     agent.train(num_episodes)
 
     show_plot(agent)
