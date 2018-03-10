@@ -14,6 +14,10 @@ from mpl_toolkits.mplot3d import Axes3D
 
 random.seed(0)
 
+my_var = 42
+
+
+
 def show_plot(agent):
     resolution = 200
     xs = np.linspace(agent.min_x, agent.max_x, resolution)
